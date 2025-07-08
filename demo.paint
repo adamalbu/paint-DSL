@@ -1,2 +1,3 @@
-print "Hello"
+word = "Hello"
+print word
 print "World"
