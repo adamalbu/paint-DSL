@@ -5,16 +5,23 @@ import ast
 py_ast = ast.Module(body=[], type_ignores=[])
 
 def p_program(p):
-    'program : command'
-    p[0] = ast.Module(
-        body=[ast.Expr(value=p[1], lineno=1, col_offset=0)],
+    """program : program command
+               | command"""
+    if len(p) == 3:
+        p[0] = p[1] + [p[2]]
+    else:
+        p[0] = [p[1]]
+
+    global py_ast
+    py_ast = ast.Module(
+        body=[ast.Expr(value=cmd, lineno=1, col_offset=0) for cmd in p[0]],
         type_ignores=[]
     )
-    global py_ast
-    py_ast = p[0]
+
+
 
 def p_print(p):
-    'command : PRINT expression'
+    """command : PRINT expression"""
     p[0] = ast.Call(
         func=ast.Name(id='print', ctx=ast.Load(), lineno=1, col_offset=0),
         args=[p[2]],
@@ -24,7 +31,7 @@ def p_print(p):
     )
 
 def p_string(p):
-    'expression : STRING'
+    """expression : STRING"""
     p[0] = ast.Constant(value=p[1][1:-1], lineno=1, col_offset=0)
 
 def p_error(p):

@@ -1,6 +1,7 @@
 from yacc import yacc, parse_and_execute
 
-filename = input("Enter filename: ")
+# filename = input("Enter filename: ")
+filename = "demo.paint"
 
 try:
     with open(filename, 'r') as file:
